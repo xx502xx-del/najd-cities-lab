@@ -599,7 +599,9 @@
 
         function deleteCity(id, event) {
             if (event) event.stopPropagation();
-            if (confirm('هل تريد حذف هذه المدينة؟')) {
+            const city = cities.find(c => c.id === id);
+            const cityName = city ? city.name : '';
+            if (confirm(`هل تريد حذف مدينة (${cityName})؟`)) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
                 localStorage.setItem('najd_cities_coords_v5', JSON.stringify(cities));
@@ -608,12 +610,15 @@
 
         function enableDrag(el, cityObj) {
             let startX, startY, origX, origY, isDragging = false;
+            let longPressTimer = null;
+            let hasMoved = false;
 
             function onPointerDown(e) {
                 if (isPreviewMode) return;
                 if (e.target.classList.contains('city-del-btn')) return;
 
                 isDragging = true;
+                hasMoved = false;
                 el.classList.add('dragging');
 
                 const clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -623,6 +628,15 @@
                 startY = clientY;
                 origX = cityObj.x;
                 origY = cityObj.y;
+
+                // ميزة الضغط المطول (Long Press لمدة ثانية) لحذف المدينة بسهولة على الجوال
+                longPressTimer = setTimeout(() => {
+                    if (!hasMoved && isDragging) {
+                        isDragging = false;
+                        el.classList.remove('dragging');
+                        deleteCity(cityObj.id, e);
+                    }
+                }, 900);
 
                 window.addEventListener('pointermove', onPointerMove);
                 window.addEventListener('pointerup', onPointerUp);
@@ -643,6 +657,15 @@
                 const dx = (clientX - startX) * scaleX;
                 const dy = (clientY - startY) * scaleY;
 
+                // إذا تحرك الإصبع أكثر من 3 بكسل نلغي مؤقت الحذف لأنه سحب عادي
+                if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+                    hasMoved = true;
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                    }
+                }
+
                 let newX = Math.round(origX + dx);
                 let newY = Math.round(origY + dy);
 
@@ -657,6 +680,10 @@
             }
 
             function onPointerUp() {
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
                 if (!isDragging) return;
                 isDragging = false;
                 el.classList.remove('dragging');
