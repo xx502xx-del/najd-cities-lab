@@ -139,9 +139,21 @@
             font-family: 'XQ55', sans-serif;
             font-size: 12px;
             padding: 6px 10px;
-            width: 120px;
+            width: 100px;
             outline: none;
             text-align: right;
+        }
+
+        .add-city-select {
+            background: #11151e;
+            border: none;
+            border-right: 1px solid #2b384e;
+            color: #38bdf8;
+            font-family: 'XQ55', sans-serif;
+            font-size: 11px;
+            padding: 6px 4px;
+            outline: none;
+            cursor: pointer;
         }
 
         .add-city-input::placeholder {
@@ -291,10 +303,6 @@
         /* مسميات المدن — حجم 8px موحد للجميع بلون أبيض ناصع وتظليل محمي */
         .city-node-item .city-label {
             position: absolute;
-            left: -46px;
-            top: 11px;
-            width: 100px;
-            text-align: center;
             font-size: 8px;
             font-weight: 700;
             line-height: 1.2;
@@ -303,8 +311,42 @@
                         1px 0 0 rgba(0, 0, 0, 0.5), -1px 0 0 rgba(0, 0, 0, 0.5);
             font-family: 'XQ55', system-ui, -apple-system, Arial, sans-serif;
             white-space: nowrap;
-            pointer-events: none;
             letter-spacing: 0.01em;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        /* المواضع الأربعة للنص */
+        /* 1. أسفل النقطة (الافتراضي) */
+        .city-label.pos-bottom {
+            left: -46px;
+            top: 11px;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* 2. أعلى النقطة */
+        .city-label.pos-top {
+            left: -46px;
+            bottom: 11px;
+            width: 100px;
+            text-align: center;
+        }
+
+        /* 3. يمين النقطة (للنصوص العربية على يمين النقطة) */
+        .city-label.pos-right {
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: left;
+        }
+
+        /* 4. يسار النقطة */
+        .city-label.pos-left {
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
         }
 
         /* وضع المعاينة النهائي المقفل */
@@ -379,9 +421,15 @@
         </div>
 
         <div class="controls-toolbar">
-            <!-- إضافة مدينة جديدة -->
+            <!-- إضافة مدينة جديدة مع تحديد موضع النص -->
             <div class="add-city-group">
                 <input type="text" id="new-city-name" class="add-city-input" placeholder="اسم المدينة..." onkeydown="if(event.key==='Enter') addNewCity()">
+                <select id="new-city-pos" class="add-city-select" title="موضع النص بالنسبة للنقطة">
+                    <option value="bottom">⬇️ أسفل</option>
+                    <option value="top">⬆️ أعلى</option>
+                    <option value="right">➡️ يمين</option>
+                    <option value="left">⬅️ يسار</option>
+                </select>
                 <button class="btn-add-submit" onclick="addNewCity()">➕ إضافة</button>
             </div>
 
@@ -435,15 +483,15 @@
 
     <script>
         const DEFAULT_CITIES = [
-            { id: 'riyadh', name: 'الرياض', x: 390, y: 330 },
-            { id: 'majmaah', name: 'المجمعة', x: 345, y: 235 },
-            { id: 'dawadmi', name: 'الدوادمي', x: 250, y: 315 },
-            { id: 'afif', name: 'عفيف', x: 165, y: 345 },
-            { id: 'onaizah', name: 'عنيزة', x: 295, y: 205 },
-            { id: 'rass', name: 'الرس', x: 265, y: 210 },
-            { id: 'hail', name: 'حائل', x: 195, y: 115 },
-            { id: 'hafr', name: 'حفر الباطن', x: 460, y: 110 },
-            { id: 'dawasir', name: 'الوادي', x: 315, y: 555 }
+            { id: 'riyadh', name: 'الرياض', x: 390, y: 330, pos: 'bottom' },
+            { id: 'majmaah', name: 'المجمعة', x: 345, y: 235, pos: 'bottom' },
+            { id: 'dawadmi', name: 'الدوادمي', x: 250, y: 315, pos: 'bottom' },
+            { id: 'afif', name: 'عفيف', x: 165, y: 345, pos: 'bottom' },
+            { id: 'onaizah', name: 'عنيزة', x: 295, y: 205, pos: 'bottom' },
+            { id: 'rass', name: 'الرس', x: 265, y: 210, pos: 'bottom' },
+            { id: 'hail', name: 'حائل', x: 195, y: 115, pos: 'bottom' },
+            { id: 'hafr', name: 'حفر الباطن', x: 460, y: 110, pos: 'bottom' },
+            { id: 'dawasir', name: 'الوادي', x: 315, y: 555, pos: 'bottom' }
         ];
 
         let cities = [];
@@ -473,7 +521,7 @@
         }
 
         function initCities() {
-            const saved = localStorage.getItem('najd_cities_coords_v3');
+            const saved = localStorage.getItem('najd_cities_coords_v4');
             if (saved) {
                 try {
                     cities = JSON.parse(saved);
@@ -496,6 +544,7 @@
         function renderMarkers() {
             layer.innerHTML = '';
             cities.forEach(city => {
+                if (!city.pos) city.pos = 'bottom';
                 const marker = document.createElement('div');
                 marker.className = 'city-marker';
                 marker.id = 'marker-' + city.id;
@@ -504,7 +553,7 @@
                 marker.innerHTML = `
                     <div class="city-node-item" style="transform: translate(-4px, -4px);">
                         <div class="city-dot"></div>
-                        <div class="city-label">${city.name}</div>
+                        <div class="city-label pos-${city.pos}" title="انقر لتغيير موضع النص (أسفل / أعلى / يمين / يسار)" onclick="cycleLabelPosition('${city.id}', event)">${city.name}</div>
                         <span class="city-del-btn" title="حذف المدينة" onclick="deleteCity('${city.id}', event)">✕</span>
                     </div>
                 `;
@@ -514,23 +563,38 @@
             });
         }
 
+        // إمكانية النقر على اسم أي مدينة لتبديل موضع النص فوراً (أسفل -> أعلى -> يمين -> يسار)
+        function cycleLabelPosition(id, event) {
+            if (event) event.stopPropagation();
+            const city = cities.find(c => c.id === id);
+            if (!city) return;
+            const positions = ['bottom', 'top', 'right', 'left'];
+            const curIdx = positions.indexOf(city.pos || 'bottom');
+            city.pos = positions[(curIdx + 1) % positions.length];
+            renderMarkers();
+            localStorage.setItem('najd_cities_coords_v4', JSON.stringify(cities));
+        }
+
         function addNewCity() {
             const input = document.getElementById('new-city-name');
+            const posSelect = document.getElementById('new-city-pos');
             const name = input.value.trim();
             if (!name) return;
 
+            const pos = posSelect ? posSelect.value : 'bottom';
             const id = 'city_' + Date.now();
             const newCity = {
                 id: id,
                 name: name,
                 x: 380,
-                y: 308
+                y: 308,
+                pos: pos
             };
 
             cities.push(newCity);
             input.value = '';
             renderMarkers();
-            localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_coords_v4', JSON.stringify(cities));
         }
 
         function deleteCity(id, event) {
@@ -538,7 +602,7 @@
             if (confirm('هل تريد حذف هذه المدينة؟')) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
-                localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_v4', JSON.stringify(cities));
             }
         }
 
@@ -600,7 +664,7 @@
                 window.removeEventListener('pointerup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
-                localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_v4', JSON.stringify(cities));
             }
 
             el.addEventListener('pointerdown', onPointerDown);
@@ -628,7 +692,7 @@
 
         function resetDefaultPositions() {
             if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
-                localStorage.removeItem('najd_cities_coords_v3');
+                localStorage.removeItem('najd_cities_coords_v4');
                 cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
                 renderMarkers();
             }
@@ -636,7 +700,7 @@
 
         function saveCoordinates() {
             const jsonStr = JSON.stringify(cities, null, 2);
-            localStorage.setItem('najd_cities_coords_v3', jsonStr);
+            localStorage.setItem('najd_cities_coords_v4', jsonStr);
 
             const modal = document.getElementById('code-modal');
             const textarea = document.getElementById('output-code');
