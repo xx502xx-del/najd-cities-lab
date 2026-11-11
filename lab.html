@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+    <title>مختبر إسقاط وضبط المدن التفاعلي</title>
+    <style>
+        @font-face {
+            font-family: 'XQ55';
+            src: url('xq55.ttf?t=1731341000') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --bg-color: #070a12;
+            --panel-bg: rgba(17, 21, 30, 0.95);
+            --accent-cyan: #38bdf8;
+            --border-glass: #1e2634;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            font-family: 'XQ55', system-ui, -apple-system, Arial, sans-serif;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* شريط علوي أنيق بنفس طراز مشروعنا الأصلي */
+        #top-bar {
+            width: 100%;
+            background: #11151e;
+            border-bottom: 1px solid #1e2634;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            z-index: 50;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* أدوات التحكم وإضافة المدن */
+        .controls-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-act {
+            border: 1px solid #2b384e;
+            background: #1a2232;
+            color: #e2e8f0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'XQ55', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .btn-act:hover {
+            background: #222c40;
+            border-color: #38bdf8;
+            color: #ffffff;
+        }
+
+        .btn-save-primary {
+            background: #0284c7;
+            border-color: #38bdf8;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        .btn-save-primary:hover {
+            background: #38bdf8;
+            color: #070a12;
+            box-shadow: 0 0 16px rgba(56, 189, 248, 0.7);
+        }
+
+        .btn-lock.locked {
+            background: #166534;
+            border-color: #22c55e;
+            color: #bbf7d0;
+        }
+
+        /* حقل إضافة مدينة جديدة */
+        .add-city-group {
+            display: flex;
+            align-items: center;
+            background: #090d16;
+            border: 1px solid #2b384e;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .add-city-input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'XQ55', sans-serif;
+            font-size: 12px;
+            padding: 6px 10px;
+            width: 120px;
+            outline: none;
+            text-align: right;
+        }
+
+        .add-city-input::placeholder {
+            color: #64748b;
+        }
+
+        .btn-add-submit {
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: 'XQ55', sans-serif;
+            transition: background 0.15s;
+        }
+
+        .btn-add-submit:hover {
+            background: #3b82f6;
+        }
+
+        /* ==================================================================
+           مسرح القمر الصناعي — مطابق حرفياً لمشروعنا الأصلي (image-stage)
+           ================================================================== */
+        #main-stage-area {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+        .image-stage {
+            position: relative;
+            display: inline-block;
+            line-height: 0;
+            border: 1px solid rgba(56, 189, 248, 0.28);
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(56, 189, 248, 0.12);
+            background: #070a12;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            max-width: 100%;
+        }
+
+        #satellite-image {
+            width: 760px;
+            height: 616px;
+            max-width: 95vw;
+            height: auto;
+            aspect-ratio: 760 / 616;
+            display: block;
+            object-fit: fill;
+            pointer-events: none;
+        }
+
+        /* طبقة المدن المتطابقة كلياً */
+        #markers-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            line-height: normal;
+        }
+
+        /* ══════════════════════════════════════════════════════════════════
+           تصميم المدن والنقط والتظليل المطابق 100% لمشروع الأقمار المطور بالمدن
+           ══════════════════════════════════════════════════════════════════ */
+
+        .city-marker {
+            position: absolute;
+            cursor: grab;
+            touch-action: none;
+            z-index: 10;
+            pointer-events: auto;
+            transform-origin: 0 0;
+        }
+
+        .city-marker:active, .city-marker.dragging {
+            cursor: grabbing;
+            z-index: 100;
+        }
+
+        /* زر حذف المدينة */
+        .city-del-btn {
+            display: none;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 14px;
+            height: 14px;
+            background: #dc2626;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 10px;
+            font-family: monospace;
+            line-height: 14px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 0 4px #000;
+            z-index: 20;
+        }
+
+        .city-marker:hover .city-del-btn {
+            display: block;
+        }
+
+        /* أيقونة المدن السعودية العادية */
+        .city-node-normal {
+            position: relative;
+            width: 8px;
+            height: 8px;
+        }
+
+        .city-node-normal .city-dot {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1.5px solid #000;
+            border-radius: 50%;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.9);
+        }
+
+        .city-node-normal .city-label {
+            position: absolute;
+            left: -46px;
+            top: 11px;
+            width: 100px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 3px #000, 0 0 6px rgba(0, 0, 0, 0.9),
+                        1px 0 0 rgba(0, 0, 0, 0.5), -1px 0 0 rgba(0, 0, 0, 0.5);
+            font-family: 'XQ55', system-ui, -apple-system, Arial, sans-serif;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 0.01em;
+        }
+
+        /* أيقونة العاصمة الرياض المأخوذة من مشروع الأقمار */
+        .city-node-capital {
+            position: relative;
+            width: 10px;
+            height: 10px;
+        }
+
+        .city-node-capital .city-dot {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 210, 0, 0.95);
+            border: 1.5px solid #000;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 1);
+        }
+
+        .city-node-capital .city-label {
+            position: absolute;
+            left: -45px;
+            top: 13px;
+            width: 100px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: rgba(255, 255, 180, 0.98);
+            text-shadow: 0 1px 4px #000, 0 0 8px rgba(0, 0, 0, 1),
+                        1px 0 0 rgba(0, 0, 0, 0.8), -1px 0 0 rgba(0, 0, 0, 0.8);
+            font-family: 'XQ55', system-ui, -apple-system, Arial, sans-serif;
+            white-space: nowrap;
+            pointer-events: none;
+            letter-spacing: 0.02em;
+        }
+
+        /* وضع المعاينة النهائي المقفل */
+        .preview-mode .city-marker {
+            cursor: default !important;
+        }
+        .preview-mode .city-del-btn {
+            display: none !important;
+        }
+
+        /* Modal Dialog for Saved Code */
+        #code-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #0f172a;
+            border: 1px solid var(--accent-cyan);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 650px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            text-align: right;
+        }
+
+        .modal-box h3 {
+            margin: 0 0 8px 0;
+            color: #38bdf8;
+            font-size: 16px;
+        }
+
+        .modal-textarea {
+            width: 100%;
+            height: 180px;
+            background: #020617;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            color: #4ade80;
+            font-family: monospace;
+            font-size: 12px;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            margin: 12px 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الشريط العلوي -->
+    <header id="top-bar">
+        <div class="brand-section">
+            <span style="font-size: 18px;">🛰️</span>
+            <h1 class="brand-title">مختبر إسقاط وضبط المدن المطور</h1>
+        </div>
+
+        <div class="controls-toolbar">
+            <!-- إضافة مدينة جديدة -->
+            <div class="add-city-group">
+                <input type="text" id="new-city-name" class="add-city-input" placeholder="اسم المدينة..." onkeydown="if(event.key==='Enter') addNewCity()">
+                <button class="btn-add-submit" onclick="addNewCity()">➕ إضافة</button>
+            </div>
+
+            <!-- زر المعاينة -->
+            <button id="btn-mode" class="btn-act btn-lock" onclick="togglePreviewMode()">
+                <span id="mode-icon">🔒</span>
+                <span id="mode-text">معاينة التثبيت</span>
+            </button>
+
+            <!-- زر الحفظ -->
+            <button id="btn-save" class="btn-act btn-save-primary" onclick="saveCoordinates()">
+                <span>💾</span>
+                <span>حفظ واعتماد</span>
+            </button>
+
+            <!-- إعادة الضبط -->
+            <button class="btn-act" style="color: #f87171;" onclick="resetDefaultPositions()">
+                <span>🔄</span>
+                <span>إعادة ضبط</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- منطقة العرض المركزية (image-stage مطابق للأصل) -->
+    <main id="main-stage-area">
+        <div class="image-stage" id="stage">
+            <img id="satellite-image" src="sample_sat.jpg?t=1731341000" alt="Meteosat Najd Sector">
+            <div id="markers-layer"></div>
+        </div>
+    </main>
+
+    <!-- نافذة كود الإحداثيات -->
+    <div id="code-modal">
+        <div class="modal-box">
+            <h3>🎉 تم حفظ وتوليد إحداثيات المدن بنجاح!</h3>
+            <p style="font-size:12px; color:#cbd5e1;">تم نسخ الكود تلقائياً لحافظة جهازك، كما تم حفظه في ذاكرة المتصفح. يمكنك إرساله لي لاعتماده فوراً:</p>
+            <textarea id="output-code" class="modal-textarea" readonly></textarea>
+            <div class="modal-actions">
+                <button class="btn-act btn-save-primary" onclick="copyModalCode()">📋 إعادة النسخ</button>
+                <button class="btn-act" onclick="closeModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_CITIES = [
+            { id: 'riyadh', name: 'الرياض', x: 390, y: 330, isCapital: true },
+            { id: 'kharj', name: 'الخرج', x: 405, y: 375 },
+            { id: 'majmaah', name: 'المجمعة', x: 345, y: 235 },
+            { id: 'shaqra', name: 'شقراء', x: 320, y: 275 },
+            { id: 'dawadmi', name: 'الدوادمي', x: 250, y: 315 },
+            { id: 'afif', name: 'عفيف', x: 165, y: 345 },
+            { id: 'buraidah', name: 'بريدة', x: 285, y: 190 },
+            { id: 'onaizah', name: 'عنيزة', x: 295, y: 205 },
+            { id: 'rass', name: 'الرس', x: 265, y: 210 },
+            { id: 'zulfi', name: 'الزلفي', x: 335, y: 205 },
+            { id: 'hail', name: 'حائل', x: 195, y: 115 },
+            { id: 'hafr', name: 'حفر الباطن', x: 460, y: 110 },
+            { id: 'quwayiyah', name: 'القويعية', x: 310, y: 360 },
+            { id: 'howtah', name: 'حوطة بني تميم', x: 400, y: 420 },
+            { id: 'dawasir', name: 'وادي الدواسر', x: 315, y: 555 },
+            { id: 'rumah', name: 'رماح', x: 435, y: 280 }
+        ];
+
+        let cities = [];
+        let isPreviewMode = false;
+        const stage = document.getElementById('stage');
+        const layer = document.getElementById('markers-layer');
+
+        function initCities() {
+            const saved = localStorage.getItem('najd_cities_coords_final');
+            if (saved) {
+                try {
+                    cities = JSON.parse(saved);
+                } catch(e) {
+                    cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
+                }
+            } else {
+                cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
+            }
+            renderMarkers();
+        }
+
+        function updateMarkerPosition(marker, city) {
+            const pctX = (city.x / 760) * 100;
+            const pctY = (city.y / 616) * 100;
+            marker.style.left = pctX + '%';
+            marker.style.top = pctY + '%';
+        }
+
+        function renderMarkers() {
+            layer.innerHTML = '';
+            cities.forEach(city => {
+                const marker = document.createElement('div');
+                marker.className = 'city-marker';
+                marker.id = 'marker-' + city.id;
+                updateMarkerPosition(marker, city);
+
+                if (city.isCapital) {
+                    marker.innerHTML = `
+                        <div class="city-node-capital" style="transform: translate(-5px, -5px);">
+                            <div class="city-dot"></div>
+                            <div class="city-label">${city.name}</div>
+                        </div>
+                    `;
+                } else {
+                    marker.innerHTML = `
+                        <div class="city-node-normal" style="transform: translate(-4px, -4px);">
+                            <div class="city-dot"></div>
+                            <div class="city-label">${city.name}</div>
+                            <span class="city-del-btn" title="حذف المدينة" onclick="deleteCity('${city.id}', event)">✕</span>
+                        </div>
+                    `;
+                }
+
+                enableDrag(marker, city);
+                layer.appendChild(marker);
+            });
+        }
+
+        function addNewCity() {
+            const input = document.getElementById('new-city-name');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const id = 'city_' + Date.now();
+            const newCity = {
+                id: id,
+                name: name,
+                x: 380,
+                y: 308,
+                isCapital: false
+            };
+
+            cities.push(newCity);
+            input.value = '';
+            renderMarkers();
+            localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+        }
+
+        function deleteCity(id, event) {
+            if (event) event.stopPropagation();
+            if (confirm('هل تريد حذف هذه المدينة؟')) {
+                cities = cities.filter(c => c.id !== id);
+                renderMarkers();
+                localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+            }
+        }
+
+        function enableDrag(el, cityObj) {
+            let startX, startY, origX, origY, isDragging = false;
+
+            function onPointerDown(e) {
+                if (isPreviewMode) return;
+                if (e.target.classList.contains('city-del-btn')) return;
+
+                isDragging = true;
+                el.classList.add('dragging');
+
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                startX = clientX;
+                startY = clientY;
+                origX = cityObj.x;
+                origY = cityObj.y;
+
+                window.addEventListener('pointermove', onPointerMove);
+                window.addEventListener('pointerup', onPointerUp);
+                window.addEventListener('touchmove', onPointerMove, { passive: false });
+                window.addEventListener('touchend', onPointerUp);
+                e.preventDefault();
+            }
+
+            function onPointerMove(e) {
+                if (!isDragging || isPreviewMode) return;
+                const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+                const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+                const stageRect = stage.getBoundingClientRect();
+                const scaleX = 760 / stageRect.width;
+                const scaleY = 616 / stageRect.height;
+
+                const dx = (clientX - startX) * scaleX;
+                const dy = (clientY - startY) * scaleY;
+
+                let newX = Math.round(origX + dx);
+                let newY = Math.round(origY + dy);
+
+                newX = Math.max(10, Math.min(750, newX));
+                newY = Math.max(10, Math.min(606, newY));
+
+                cityObj.x = newX;
+                cityObj.y = newY;
+
+                updateMarkerPosition(el, cityObj);
+                e.preventDefault();
+            }
+
+            function onPointerUp() {
+                if (!isDragging) return;
+                isDragging = false;
+                el.classList.remove('dragging');
+                window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerup', onPointerUp);
+                window.removeEventListener('touchmove', onPointerMove);
+                window.removeEventListener('touchend', onPointerUp);
+                localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+            }
+
+            el.addEventListener('pointerdown', onPointerDown);
+            el.addEventListener('touchstart', onPointerDown, { passive: false });
+        }
+
+        function togglePreviewMode() {
+            isPreviewMode = !isPreviewMode;
+            const btn = document.getElementById('btn-mode');
+            const icon = document.getElementById('mode-icon');
+            const text = document.getElementById('mode-text');
+
+            if (isPreviewMode) {
+                stage.classList.add('preview-mode');
+                btn.classList.add('locked');
+                icon.textContent = '🔓';
+                text.textContent = 'العودة للتعديل';
+            } else {
+                stage.classList.remove('preview-mode');
+                btn.classList.remove('locked');
+                icon.textContent = '🔒';
+                text.textContent = 'معاينة التثبيت';
+            }
+        }
+
+        function resetDefaultPositions() {
+            if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
+                localStorage.removeItem('najd_cities_coords_final');
+                cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
+                renderMarkers();
+            }
+        }
+
+        function saveCoordinates() {
+            const jsonStr = JSON.stringify(cities, null, 2);
+            localStorage.setItem('najd_cities_coords_final', jsonStr);
+
+            const modal = document.getElementById('code-modal');
+            const textarea = document.getElementById('output-code');
+            textarea.value = jsonStr;
+            modal.style.display = 'flex';
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(jsonStr).catch(() => {});
+            }
+        }
+
+        function copyModalCode() {
+            const textarea = document.getElementById('output-code');
+            textarea.select();
+            document.execCommand('copy');
+            alert('تم نسخ كود الإحداثيات للحافظة!');
+        }
+
+        function closeModal() {
+            document.getElementById('code-modal').style.display = 'none';
+        }
+
+        window.onload = initCities;
+    </script>
+</body>
+</html>
