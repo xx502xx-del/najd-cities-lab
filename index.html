@@ -284,20 +284,20 @@
             display: block;
         }
 
-        /* النقطة موحدة بحجم 8px وإطار أسود دقيق وظل */
+        /* النقطة موحدة بحجم مصغر وناعم 6px مع إطار دقيق 1px وظل */
         .city-node-item {
             position: relative;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         .city-node-item .city-dot {
             position: absolute;
             inset: 0;
-            background: rgba(255, 255, 255, 0.95);
-            border: 1.5px solid #000;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #000;
             border-radius: 50%;
-            box-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.9), 0 0 1px rgba(0, 0, 0, 1);
         }
 
         /* مسميات المدن — حجم 8px موحد للجميع بلون أبيض ناصع وتظليل محمي */
@@ -316,26 +316,26 @@
             transition: all 0.15s ease;
         }
 
-        /* المواضع الأربعة للنص */
-        /* 1. أسفل النقطة (الافتراضي) */
+        /* المواضع الأربعة للنص متناسبة مع النقطة المصغرة */
+        /* 1. أسفل النقطة */
         .city-label.pos-bottom {
-            left: -46px;
-            top: 11px;
+            left: -47px;
+            top: 9px;
             width: 100px;
             text-align: center;
         }
 
         /* 2. أعلى النقطة */
         .city-label.pos-top {
-            left: -46px;
-            bottom: 11px;
+            left: -47px;
+            bottom: 9px;
             width: 100px;
             text-align: center;
         }
 
-        /* 3. يمين النقطة (للنصوص العربية على يمين النقطة) */
+        /* 3. يمين النقطة */
         .city-label.pos-right {
-            right: 12px;
+            right: 10px;
             top: 50%;
             transform: translateY(-50%);
             text-align: left;
@@ -343,7 +343,7 @@
 
         /* 4. يسار النقطة */
         .city-label.pos-left {
-            left: 12px;
+            left: 10px;
             top: 50%;
             transform: translateY(-50%);
             text-align: right;
@@ -787,7 +787,7 @@
                 updateMarkerPosition(marker, city);
 
                 marker.innerHTML = `
-                    <div class="city-node-item" style="transform: translate(-4px, -4px);">
+                    <div class="city-node-item" style="transform: translate(-3px, -3px);">
                         <div class="city-dot"></div>
                         <div class="city-label pos-${city.pos}" title="انقر لتغيير موضع النص (أسفل / أعلى / يمين / يسار)" onclick="cycleLabelPosition('${city.id}', event)">${city.name}</div>
                         <span class="city-del-btn" title="حذف المدينة" onclick="deleteCity('${city.id}', event)">✕</span>
