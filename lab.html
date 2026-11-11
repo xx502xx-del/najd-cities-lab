@@ -486,9 +486,9 @@
   {
     "id": "hail",
     "name": "حائل",
-    "x": 205,
-    "y": 73,
-    "pos": "bottom"
+    "x": 201,
+    "y": 72,
+    "pos": "top"
   },
   {
     "id": "hafr",
@@ -500,7 +500,7 @@
   {
     "id": "dawasir",
     "name": "الوادي",
-    "x": 355,
+    "x": 360,
     "y": 477,
     "pos": "top"
   },
@@ -514,8 +514,8 @@
   {
     "id": "city_1794414125727",
     "name": "الباحة",
-    "x": 189,
-    "y": 497,
+    "x": 187,
+    "y": 500,
     "pos": "right"
   },
   {
@@ -535,16 +535,16 @@
   {
     "id": "city_1794414222702",
     "name": "الهفوف",
-    "x": 615,
-    "y": 197,
+    "x": 614,
+    "y": 195,
     "pos": "bottom"
   },
   {
     "id": "city_1794414239405",
     "name": "الدوحة",
-    "x": 718,
-    "y": 194,
-    "pos": "right"
+    "x": 716,
+    "y": 198,
+    "pos": "left"
   },
   {
     "id": "city_1794414292414",
@@ -556,7 +556,7 @@
   {
     "id": "city_1794414312215",
     "name": "الدمام",
-    "x": 634,
+    "x": 637,
     "y": 133,
     "pos": "right"
   },
@@ -577,8 +577,8 @@
   {
     "id": "city_1794414583489",
     "name": "عفيف",
-    "x": 259,
-    "y": 283,
+    "x": 261,
+    "y": 281,
     "pos": "right"
   },
   {
@@ -612,9 +612,9 @@
   {
     "id": "city_1794414751884",
     "name": "مكة",
-    "x": 95,
-    "y": 417,
-    "pos": "top"
+    "x": 100,
+    "y": 421,
+    "pos": "right"
   },
   {
     "id": "city_1794417947821",
@@ -626,9 +626,9 @@
   {
     "id": "city_1794417989881",
     "name": "الافلاج",
-    "x": 470,
-    "y": 377,
-    "pos": "bottom"
+    "x": 464,
+    "y": 374,
+    "pos": "top"
   },
   {
     "id": "city_1794418048378",
@@ -648,8 +648,8 @@
     "id": "city_1794418104092",
     "name": "رابغ",
     "x": 60,
-    "y": 335,
-    "pos": "left"
+    "y": 341,
+    "pos": "bottom"
   },
   {
     "id": "city_1794418166391",
@@ -689,7 +689,7 @@
   {
     "id": "city_1794418544237",
     "name": "الرياض",
-    "x": 468,
+    "x": 464,
     "y": 236,
     "pos": "top"
   },
@@ -717,15 +717,15 @@
   {
     "id": "city_1794419604615",
     "name": "الدوادمي",
-    "x": 338,
+    "x": 339,
     "y": 245,
-    "pos": "right"
+    "pos": "left"
   },
   {
     "id": "city_1794419635841",
     "name": "عنيزة",
-    "x": 322,
-    "y": 150,
+    "x": 319,
+    "y": 155,
     "pos": "top"
   }
 ];
@@ -757,7 +757,7 @@
         }
 
         function initCities() {
-            const saved = localStorage.getItem('najd_cities_calibrated_final');
+            const saved = localStorage.getItem('najd_cities_verified_al_asl');
             if (saved) {
                 try {
                     cities = JSON.parse(saved);
@@ -808,7 +808,7 @@
             const curIdx = positions.indexOf(city.pos || 'bottom');
             city.pos = positions[(curIdx + 1) % positions.length];
             renderMarkers();
-            localStorage.setItem('najd_cities_calibrated_final', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_verified_al_asl', JSON.stringify(cities));
         }
 
         function addNewCity() {
@@ -830,7 +830,7 @@
             cities.push(newCity);
             input.value = '';
             renderMarkers();
-            localStorage.setItem('najd_cities_calibrated_final', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_verified_al_asl', JSON.stringify(cities));
         }
 
         function deleteCity(id, event) {
@@ -840,7 +840,7 @@
             if (confirm(`هل تريد حذف مدينة (${cityName})؟`)) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
-                localStorage.setItem('najd_cities_calibrated_final', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_verified_al_asl', JSON.stringify(cities));
             }
         }
 
@@ -927,7 +927,7 @@
                 window.removeEventListener('pointerup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
-                localStorage.setItem('najd_cities_calibrated_final', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_verified_al_asl', JSON.stringify(cities));
             }
 
             el.addEventListener('pointerdown', onPointerDown);
@@ -955,7 +955,7 @@
 
         function resetDefaultPositions() {
             if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
-                localStorage.removeItem('najd_cities_calibrated_final');
+                localStorage.removeItem('najd_cities_verified_al_asl');
                 cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
                 renderMarkers();
             }
@@ -963,7 +963,7 @@
 
         function saveCoordinates() {
             const jsonStr = JSON.stringify(cities, null, 2);
-            localStorage.setItem('najd_cities_calibrated_final', jsonStr);
+            localStorage.setItem('najd_cities_verified_al_asl', jsonStr);
 
             const modal = document.getElementById('code-modal');
             const textarea = document.getElementById('output-code');
