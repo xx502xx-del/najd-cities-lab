@@ -10,7 +10,7 @@
     <style>
         @font-face {
             font-family: 'XQ55';
-            src: url('xq55.ttf?t=1731341000') format('truetype');
+            src: url('xq55.ttf?t=1731341002') format('truetype');
             font-weight: normal;
             font-style: normal;
         }
@@ -45,7 +45,7 @@
             align-items: center;
         }
 
-        /* شريط علوي أنيق بنفس طراز مشروعنا الأصلي */
+        /* شريط علوي أنيق */
         #top-bar {
             width: 100%;
             background: #11151e;
@@ -204,7 +204,7 @@
             pointer-events: none;
         }
 
-        /* طبقة المدن المتطابقة كلياً */
+        /* طبقة المدن */
         #markers-layer {
             position: absolute;
             top: 0;
@@ -216,7 +216,7 @@
         }
 
         /* ══════════════════════════════════════════════════════════════════
-           تصميم المدن والنقط والتظليل المطابق 100% لمشروع الأقمار المطور بالمدن
+           تصميم المدن والنقط والتظليل — موحد للجميع بحجم 9px ونفس اللون الأبيض
            ══════════════════════════════════════════════════════════════════ */
 
         .city-marker {
@@ -257,14 +257,14 @@
             display: block;
         }
 
-        /* أيقونة المدن السعودية العادية */
-        .city-node-normal {
+        /* النقطة موحدة بحجم 8px وإطار أسود دقيق وظل */
+        .city-node-item {
             position: relative;
             width: 8px;
             height: 8px;
         }
 
-        .city-node-normal .city-dot {
+        .city-node-item .city-dot {
             position: absolute;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
@@ -273,13 +273,14 @@
             box-shadow: 0 0 3px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.9);
         }
 
-        .city-node-normal .city-label {
+        /* مسميات المدن — حجم 9px موحد للجميع بلون أبيض ناصع وتظليل محمي */
+        .city-node-item .city-label {
             position: absolute;
             left: -46px;
             top: 11px;
             width: 100px;
             text-align: center;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 700;
             line-height: 1.2;
             color: rgba(255, 255, 255, 0.95);
@@ -289,40 +290,6 @@
             white-space: nowrap;
             pointer-events: none;
             letter-spacing: 0.01em;
-        }
-
-        /* أيقونة العاصمة الرياض المأخوذة من مشروع الأقمار */
-        .city-node-capital {
-            position: relative;
-            width: 10px;
-            height: 10px;
-        }
-
-        .city-node-capital .city-dot {
-            position: absolute;
-            inset: 0;
-            background: rgba(255, 210, 0, 0.95);
-            border: 1.5px solid #000;
-            border-radius: 50%;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 0 2px rgba(0, 0, 0, 1);
-        }
-
-        .city-node-capital .city-label {
-            position: absolute;
-            left: -45px;
-            top: 13px;
-            width: 100px;
-            text-align: center;
-            font-size: 12px;
-            font-weight: 800;
-            line-height: 1.2;
-            color: rgba(255, 255, 180, 0.98);
-            text-shadow: 0 1px 4px #000, 0 0 8px rgba(0, 0, 0, 1),
-                        1px 0 0 rgba(0, 0, 0, 0.8), -1px 0 0 rgba(0, 0, 0, 0.8);
-            font-family: 'XQ55', system-ui, -apple-system, Arial, sans-serif;
-            white-space: nowrap;
-            pointer-events: none;
-            letter-spacing: 0.02em;
         }
 
         /* وضع المعاينة النهائي المقفل */
@@ -426,7 +393,7 @@
     <!-- منطقة العرض المركزية (image-stage مطابق للأصل) -->
     <main id="main-stage-area">
         <div class="image-stage" id="stage">
-            <img id="satellite-image" src="sample_sat.jpg?t=1731341000" alt="Meteosat Najd Sector">
+            <img id="satellite-image" src="sample_sat.jpg?t=1731341002" alt="Meteosat Najd Sector">
             <div id="markers-layer"></div>
         </div>
     </main>
@@ -446,7 +413,7 @@
 
     <script>
         const DEFAULT_CITIES = [
-            { id: 'riyadh', name: 'الرياض', x: 390, y: 330, isCapital: true },
+            { id: 'riyadh', name: 'الرياض', x: 390, y: 330 },
             { id: 'kharj', name: 'الخرج', x: 405, y: 375 },
             { id: 'majmaah', name: 'المجمعة', x: 345, y: 235 },
             { id: 'shaqra', name: 'شقراء', x: 320, y: 275 },
@@ -470,7 +437,7 @@
         const layer = document.getElementById('markers-layer');
 
         function initCities() {
-            const saved = localStorage.getItem('najd_cities_coords_final');
+            const saved = localStorage.getItem('najd_cities_coords_final_v2');
             if (saved) {
                 try {
                     cities = JSON.parse(saved);
@@ -498,22 +465,13 @@
                 marker.id = 'marker-' + city.id;
                 updateMarkerPosition(marker, city);
 
-                if (city.isCapital) {
-                    marker.innerHTML = `
-                        <div class="city-node-capital" style="transform: translate(-5px, -5px);">
-                            <div class="city-dot"></div>
-                            <div class="city-label">${city.name}</div>
-                        </div>
-                    `;
-                } else {
-                    marker.innerHTML = `
-                        <div class="city-node-normal" style="transform: translate(-4px, -4px);">
-                            <div class="city-dot"></div>
-                            <div class="city-label">${city.name}</div>
-                            <span class="city-del-btn" title="حذف المدينة" onclick="deleteCity('${city.id}', event)">✕</span>
-                        </div>
-                    `;
-                }
+                marker.innerHTML = `
+                    <div class="city-node-item" style="transform: translate(-4px, -4px);">
+                        <div class="city-dot"></div>
+                        <div class="city-label">${city.name}</div>
+                        <span class="city-del-btn" title="حذف المدينة" onclick="deleteCity('${city.id}', event)">✕</span>
+                    </div>
+                `;
 
                 enableDrag(marker, city);
                 layer.appendChild(marker);
@@ -530,14 +488,13 @@
                 id: id,
                 name: name,
                 x: 380,
-                y: 308,
-                isCapital: false
+                y: 308
             };
 
             cities.push(newCity);
             input.value = '';
             renderMarkers();
-            localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
         }
 
         function deleteCity(id, event) {
@@ -545,7 +502,7 @@
             if (confirm('هل تريد حذف هذه المدينة؟')) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
-                localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
             }
         }
 
@@ -607,7 +564,7 @@
                 window.removeEventListener('pointerup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
-                localStorage.setItem('najd_cities_coords_final', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
             }
 
             el.addEventListener('pointerdown', onPointerDown);
@@ -635,7 +592,7 @@
 
         function resetDefaultPositions() {
             if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
-                localStorage.removeItem('najd_cities_coords_final');
+                localStorage.removeItem('najd_cities_coords_final_v2');
                 cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
                 renderMarkers();
             }
@@ -643,7 +600,7 @@
 
         function saveCoordinates() {
             const jsonStr = JSON.stringify(cities, null, 2);
-            localStorage.setItem('najd_cities_coords_final', jsonStr);
+            localStorage.setItem('najd_cities_coords_final_v2', jsonStr);
 
             const modal = document.getElementById('code-modal');
             const textarea = document.getElementById('output-code');
