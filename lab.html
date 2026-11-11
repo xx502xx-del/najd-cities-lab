@@ -436,7 +436,6 @@
     <script>
         const DEFAULT_CITIES = [
             { id: 'riyadh', name: 'الرياض', x: 390, y: 330 },
-            { id: 'kharj', name: 'الخرج', x: 405, y: 375 },
             { id: 'majmaah', name: 'المجمعة', x: 345, y: 235 },
             { id: 'dawadmi', name: 'الدوادمي', x: 250, y: 315 },
             { id: 'afif', name: 'عفيف', x: 165, y: 345 },
@@ -474,7 +473,7 @@
         }
 
         function initCities() {
-            const saved = localStorage.getItem('najd_cities_coords_wadi');
+            const saved = localStorage.getItem('najd_cities_coords_v3');
             if (saved) {
                 try {
                     cities = JSON.parse(saved);
@@ -531,7 +530,7 @@
             cities.push(newCity);
             input.value = '';
             renderMarkers();
-            localStorage.setItem('najd_cities_coords_wadi', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
         }
 
         function deleteCity(id, event) {
@@ -539,7 +538,7 @@
             if (confirm('هل تريد حذف هذه المدينة؟')) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
-                localStorage.setItem('najd_cities_coords_wadi', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
             }
         }
 
@@ -601,7 +600,7 @@
                 window.removeEventListener('pointerup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
-                localStorage.setItem('najd_cities_coords_wadi', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_v3', JSON.stringify(cities));
             }
 
             el.addEventListener('pointerdown', onPointerDown);
@@ -629,7 +628,7 @@
 
         function resetDefaultPositions() {
             if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
-                localStorage.removeItem('najd_cities_coords_wadi');
+                localStorage.removeItem('najd_cities_coords_v3');
                 cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
                 renderMarkers();
             }
@@ -637,7 +636,7 @@
 
         function saveCoordinates() {
             const jsonStr = JSON.stringify(cities, null, 2);
-            localStorage.setItem('najd_cities_coords_wadi', jsonStr);
+            localStorage.setItem('najd_cities_coords_v3', jsonStr);
 
             const modal = document.getElementById('code-modal');
             const textarea = document.getElementById('output-code');
