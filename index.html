@@ -204,6 +204,21 @@
             pointer-events: none;
         }
 
+        /* طبقة الإسناد والمرجع الشفافة الأصلية 15518 */
+        #ref-overlay-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            pointer-events: none;
+            z-index: 5;
+            display: none;
+            opacity: 0.85;
+            transition: opacity 0.2s ease;
+        }
+
         /* طبقة المدن */
         #markers-layer {
             position: absolute;
@@ -370,6 +385,12 @@
                 <button class="btn-add-submit" onclick="addNewCity()">➕ إضافة</button>
             </div>
 
+            <!-- زر إظهار/إخفاء طبقة الإسناد الأصلية -->
+            <button id="btn-ref-overlay" class="btn-act" onclick="toggleRefOverlay()">
+                <span id="ref-icon">🗺️</span>
+                <span id="ref-text">إظهار خريطة الإسناد</span>
+            </button>
+
             <!-- زر المعاينة -->
             <button id="btn-mode" class="btn-act btn-lock" onclick="togglePreviewMode()">
                 <span id="mode-icon">🔒</span>
@@ -394,6 +415,7 @@
     <main id="main-stage-area">
         <div class="image-stage" id="stage">
             <img id="satellite-image" src="sample_sat.jpg?t=1731341002" alt="Meteosat Najd Sector">
+            <img id="ref-overlay-img" src="ref_layer_760x616.png?v=1" alt="Original Reference Overlay">
             <div id="markers-layer"></div>
         </div>
     </main>
@@ -427,8 +449,29 @@
 
         let cities = [];
         let isPreviewMode = false;
+        let isRefOverlayVisible = false;
         const stage = document.getElementById('stage');
         const layer = document.getElementById('markers-layer');
+        const refOverlay = document.getElementById('ref-overlay-img');
+
+        function toggleRefOverlay() {
+            isRefOverlayVisible = !isRefOverlayVisible;
+            const btn = document.getElementById('btn-ref-overlay');
+            const text = document.getElementById('ref-text');
+            if (isRefOverlayVisible) {
+                refOverlay.style.display = 'block';
+                btn.style.background = '#0284c7';
+                btn.style.borderColor = '#38bdf8';
+                btn.style.color = '#ffffff';
+                text.textContent = 'إخفاء خريطة الإسناد';
+            } else {
+                refOverlay.style.display = 'none';
+                btn.style.background = '#1a2232';
+                btn.style.borderColor = '#2b384e';
+                btn.style.color = '#e2e8f0';
+                text.textContent = 'إظهار خريطة الإسناد';
+            }
+        }
 
         function initCities() {
             const saved = localStorage.getItem('najd_cities_coords_wadi');
