@@ -416,19 +416,13 @@
             { id: 'riyadh', name: 'الرياض', x: 390, y: 330 },
             { id: 'kharj', name: 'الخرج', x: 405, y: 375 },
             { id: 'majmaah', name: 'المجمعة', x: 345, y: 235 },
-            { id: 'shaqra', name: 'شقراء', x: 320, y: 275 },
             { id: 'dawadmi', name: 'الدوادمي', x: 250, y: 315 },
             { id: 'afif', name: 'عفيف', x: 165, y: 345 },
-            { id: 'buraidah', name: 'بريدة', x: 285, y: 190 },
             { id: 'onaizah', name: 'عنيزة', x: 295, y: 205 },
             { id: 'rass', name: 'الرس', x: 265, y: 210 },
-            { id: 'zulfi', name: 'الزلفي', x: 335, y: 205 },
             { id: 'hail', name: 'حائل', x: 195, y: 115 },
             { id: 'hafr', name: 'حفر الباطن', x: 460, y: 110 },
-            { id: 'quwayiyah', name: 'القويعية', x: 310, y: 360 },
-            { id: 'howtah', name: 'حوطة بني تميم', x: 400, y: 420 },
-            { id: 'dawasir', name: 'وادي الدواسر', x: 315, y: 555 },
-            { id: 'rumah', name: 'رماح', x: 435, y: 280 }
+            { id: 'dawasir', name: 'وادي الدواسر', x: 315, y: 555 }
         ];
 
         let cities = [];
@@ -437,7 +431,7 @@
         const layer = document.getElementById('markers-layer');
 
         function initCities() {
-            const saved = localStorage.getItem('najd_cities_coords_final_v2');
+            const saved = localStorage.getItem('najd_cities_coords_clean');
             if (saved) {
                 try {
                     cities = JSON.parse(saved);
@@ -494,7 +488,7 @@
             cities.push(newCity);
             input.value = '';
             renderMarkers();
-            localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
+            localStorage.setItem('najd_cities_coords_clean', JSON.stringify(cities));
         }
 
         function deleteCity(id, event) {
@@ -502,7 +496,7 @@
             if (confirm('هل تريد حذف هذه المدينة؟')) {
                 cities = cities.filter(c => c.id !== id);
                 renderMarkers();
-                localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_clean', JSON.stringify(cities));
             }
         }
 
@@ -564,7 +558,7 @@
                 window.removeEventListener('pointerup', onPointerUp);
                 window.removeEventListener('touchmove', onPointerMove);
                 window.removeEventListener('touchend', onPointerUp);
-                localStorage.setItem('najd_cities_coords_final_v2', JSON.stringify(cities));
+                localStorage.setItem('najd_cities_coords_clean', JSON.stringify(cities));
             }
 
             el.addEventListener('pointerdown', onPointerDown);
@@ -592,7 +586,7 @@
 
         function resetDefaultPositions() {
             if (confirm('هل أنت متأكد من إعادة ضبط كل المدن إلى التوزيع الافتراضي؟')) {
-                localStorage.removeItem('najd_cities_coords_final_v2');
+                localStorage.removeItem('najd_cities_coords_clean');
                 cities = JSON.parse(JSON.stringify(DEFAULT_CITIES));
                 renderMarkers();
             }
@@ -600,7 +594,7 @@
 
         function saveCoordinates() {
             const jsonStr = JSON.stringify(cities, null, 2);
-            localStorage.setItem('najd_cities_coords_final_v2', jsonStr);
+            localStorage.setItem('najd_cities_coords_clean', jsonStr);
 
             const modal = document.getElementById('code-modal');
             const textarea = document.getElementById('output-code');
