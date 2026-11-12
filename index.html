@@ -6,7 +6,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
-    <title>مختبر معايرة الحدود وضبط المدن التفاعلي</title>
+    <title>معاينة طبقة الحدود الرسمية 15518 - مطابقة بالمليمتر</title>
     <style>
         @font-face {
             font-family: 'XQ55';
@@ -17,11 +17,8 @@
 
         :root {
             --bg-color: #070a12;
-            --panel-bg: rgba(15, 20, 30, 0.95);
-            --panel-border: #1e293b;
             --accent-cyan: #38bdf8;
             --accent-emerald: #10b981;
-            --accent-amber: #f59e0b;
         }
 
         * {
@@ -48,7 +45,6 @@
             padding-bottom: 30px;
         }
 
-        /* شريط علوي أنيق */
         #top-bar {
             width: 100%;
             background: #0f172a;
@@ -62,18 +58,11 @@
             z-index: 50;
         }
 
-        .brand-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .brand-title {
             font-size: 15px;
             font-weight: 700;
             color: var(--accent-cyan);
             margin: 0;
-            letter-spacing: 0.5px;
         }
 
         .top-actions {
@@ -83,12 +72,11 @@
             flex-wrap: wrap;
         }
 
-        /* أزرار الإجراءات */
         .btn-act {
             background: #1e293b;
             color: #e2e8f0;
             border: 1px solid #334155;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 6px;
             font-size: 12px;
             font-family: inherit;
@@ -110,147 +98,24 @@
             color: #ffffff;
         }
 
-        .btn-act.btn-save-primary {
-            background: #059669;
-            border-color: #10b981;
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .btn-act.btn-save-primary:hover {
-            background: #10b981;
-        }
-
-        /* لوحة تحكم المعايرة المتقدمة */
-        #calibration-panel {
-            width: 100%;
-            max-width: 900px;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid #334155;
-            border-radius: 10px;
-            margin: 12px 10px;
-            padding: 12px 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 8px;
-        }
-
-        .panel-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #f1f5f9;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .panel-badge {
-            background: #000000;
-            color: #38bdf8;
-            border: 1px solid #38bdf8;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: normal;
-        }
-
-        .sliders-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 12px;
-        }
-
-        .ctrl-card {
-            background: #090d16;
-            border: 1px solid #1e293b;
+        .status-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid #059669;
+            padding: 4px 10px;
             border-radius: 6px;
-            padding: 8px 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .ctrl-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: #94a3b8;
-        }
-
-        .ctrl-val {
-            font-weight: bold;
-            color: var(--accent-cyan);
-            font-family: monospace;
             font-size: 12px;
-            direction: ltr;
-        }
-
-        .slider-row {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .slider-row input[type=range] {
-            flex: 1;
-            accent-color: var(--accent-cyan);
-            cursor: pointer;
-            height: 4px;
-        }
-
-        .micro-btn {
-            background: #1e293b;
-            border: 1px solid #334155;
-            color: #e2e8f0;
-            border-radius: 4px;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 11px;
-            padding: 0;
-            transition: all 0.1s ease;
-        }
-
-        .micro-btn:hover {
-            background: #38bdf8;
-            color: #000;
-        }
-
-        .panel-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding-top: 6px;
-            border-top: 1px solid #1e293b;
-        }
-
-        .keyboard-hint {
-            font-size: 10.5px;
-            color: #64748b;
-        }
-
-        /* منطقة العرض الرئيسية */
         #main-stage-area {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 8px 10px;
+            padding: 16px 10px;
         }
 
         .image-stage {
@@ -259,7 +124,7 @@
             line-height: 0;
             border: 1px solid rgba(56, 189, 248, 0.28);
             border-radius: 8px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(56, 189, 248, 0.12);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.95), 0 0 15px rgba(56, 189, 248, 0.15);
             background: #070a12;
             touch-action: none;
             user-select: none;
@@ -279,8 +144,8 @@
             pointer-events: none;
         }
 
-        /* طبقة الحدود المعايرة باللون الأسود الخالص */
-        #borders-calibrated-layer {
+        /* طبقة الحدود الرسمية 15518 باللون الأسود الخالص */
+        #borders-15518-layer {
             position: absolute;
             top: 0;
             left: 0;
@@ -290,22 +155,7 @@
             pointer-events: none;
             z-index: 15;
             display: block;
-            transform-origin: center center;
-            will-change: transform, opacity;
-        }
-
-        /* طبقة الإسناد المرجعية الشفافة الأصلية */
-        #ref-overlay-img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: fill;
-            pointer-events: none;
-            z-index: 5;
-            display: none;
-            opacity: 0.8;
+            transition: opacity 0.2s ease;
         }
 
         /* طبقة المدن */
@@ -325,13 +175,8 @@
             position: absolute;
             width: 0;
             height: 0;
-            pointer-events: auto;
-            cursor: grab;
+            pointer-events: none;
             z-index: 10;
-        }
-
-        .city-marker:active {
-            cursor: grabbing;
         }
 
         .city-dot {
@@ -360,7 +205,6 @@
                 -0.5px  0.5px 0 #fff,
                  0.5px  0.5px 0 #fff;
             transform: translate(-50%, -50%);
-            pointer-events: none;
         }
 
         .city-marker.pos-top .city-label { top: -8px; left: 0; }
@@ -368,207 +212,57 @@
         .city-marker.pos-right .city-label { left: 10px; top: 0; transform: translate(0, -50%); }
         .city-marker.pos-left .city-label { right: 10px; top: 0; transform: translate(0, -50%); }
 
-        /* نافذة كود الإحداثيات والمعايرة */
-        #code-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .modal-box {
+        .info-card {
+            max-width: 760px;
+            width: 95%;
             background: #0f172a;
-            border: 1px solid var(--accent-cyan);
-            border-radius: 12px;
-            padding: 20px;
-            width: 100%;
-            max-width: 550px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-        }
-
-        .modal-textarea {
-            width: 100%;
-            height: 180px;
-            background: #090d16;
-            color: #38bdf8;
-            border: 1px solid #334155;
+            border: 1px solid #1e293b;
             border-radius: 8px;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 12px;
-            direction: ltr;
-            text-align: left;
-            resize: vertical;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+            padding: 14px 18px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: #cbd5e1;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
 
-    <!-- شريط علوي -->
     <header id="top-bar">
-        <div class="brand-section">
-            <h1 class="brand-title">⚙️ مختبر معايرة حدود الدول والبحار (باللون الأسود)</h1>
+        <div style="display:flex; align-items:center; gap:10px;">
+            <h1 class="brand-title">🗺️ معاينة طبقة الحدود الرسمية (15518) بالمليمتر</h1>
+            <span class="status-badge">✓ طبقة 15518 الأصلية مطبقة بالملي (باللون الأسود)</span>
         </div>
         <div class="top-actions">
-            <!-- زر إظهار/إخفاء المدن للمعايرة في هدوء -->
-            <button id="btn-toggle-cities" class="btn-act active" onclick="toggleCitiesLayer()">
+            <!-- تبديل ظهور الحدود -->
+            <button id="btn-toggle-borders" class="btn-act active" onclick="toggleBorders()">
+                <span id="borders-icon">👁️</span>
+                <span id="borders-text">إخفاء الحدود (أسود)</span>
+            </button>
+            <!-- تبديل ظهور المدن -->
+            <button id="btn-toggle-cities" class="btn-act active" onclick="toggleCities()">
                 <span id="cities-icon">📍</span>
                 <span id="cities-text">إخفاء مسميات المدن</span>
-            </button>
-            <!-- زر إظهار خريطة الإسناد للمقارنة -->
-            <button id="btn-ref-overlay" class="btn-act" onclick="toggleRefOverlay()">
-                <span id="ref-icon">🗺️</span>
-                <span id="ref-text">إظهار خريطة الإسناد</span>
-            </button>
-            <!-- زر حفظ كود المعايرة -->
-            <button class="btn-act btn-save-primary" onclick="exportCalibration()">
-                <span>📋</span>
-                <span>نسخ واعتماد المعايرة</span>
             </button>
         </div>
     </header>
 
-    <!-- لوحة أدوات المعايرة الدقيقة -->
-    <section id="calibration-panel">
-        <div class="panel-header">
-            <div class="panel-title">
-                <span>🎯 أدوات ضبط وتطابق الحدود والبحار بالمليمتر</span>
-                <span class="panel-badge">اللون: أسود نقي (بدون أي نصوص أو علامات)</span>
-            </div>
-            <div style="display:flex; gap:6px;">
-                <button class="btn-act" style="padding:3px 8px; font-size:11px;" onclick="resetCalibration()">🔄 إعادة ضبط للأصل (0,0)</button>
-            </div>
-        </div>
-
-        <div class="sliders-grid">
-            <!-- إزاحة أفقية X -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>↔️ إزاحة أفقية (X)</span>
-                    <span id="val-dx" class="ctrl-val">0.0 px</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('dx', -0.5)">-</button>
-                    <input type="range" id="slider-dx" min="-40" max="40" step="0.5" value="0" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('dx', 0.5)">+</button>
-                </div>
-            </div>
-
-            <!-- إزاحة رأسية Y -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>↕️ إزاحة رأسية (Y)</span>
-                    <span id="val-dy" class="ctrl-val">0.0 px</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('dy', -0.5)">-</button>
-                    <input type="range" id="slider-dy" min="-40" max="40" step="0.5" value="0" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('dy', 0.5)">+</button>
-                </div>
-            </div>
-
-            <!-- تمدد العرض Scale X -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>🔍 تمدد العرض (Scale X)</span>
-                    <span id="val-sx" class="ctrl-val">100.0%</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('sx', -0.2)">-</button>
-                    <input type="range" id="slider-sx" min="90" max="110" step="0.1" value="100" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('sx', 0.2)">+</button>
-                </div>
-            </div>
-
-            <!-- تمدد الارتفاع Scale Y -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>🔍 تمدد الارتفاع (Scale Y)</span>
-                    <span id="val-sy" class="ctrl-val">100.0%</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('sy', -0.2)">-</button>
-                    <input type="range" id="slider-sy" min="90" max="110" step="0.1" value="100" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('sy', 0.2)">+</button>
-                </div>
-            </div>
-
-            <!-- دوران خفيف Rotate -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>🔄 ميل / دوران (Rotate)</span>
-                    <span id="val-rot" class="ctrl-val">0.00°</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('rot', -0.1)">-</button>
-                    <input type="range" id="slider-rot" min="-5" max="5" step="0.05" value="0" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('rot', 0.1)">+</button>
-                </div>
-            </div>
-
-            <!-- الشفافية Opacity -->
-            <div class="ctrl-card">
-                <div class="ctrl-card-header">
-                    <span>👁️ وضوح خط الحدود (Opacity)</span>
-                    <span id="val-op" class="ctrl-val">100%</span>
-                </div>
-                <div class="slider-row">
-                    <button class="micro-btn" onclick="stepVal('op', -5)">-</button>
-                    <input type="range" id="slider-op" min="20" max="100" step="5" value="100" oninput="onCalibInput()">
-                    <button class="micro-btn" onclick="stepVal('op', 5)">+</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel-actions">
-            <span class="keyboard-hint">💡 يمكنك استخدام أزرار (+) و (-) للمعايرة الدقيقة جداً بالمليمتر، أو تحريك المؤشرات مباشرة.</span>
-            <button class="btn-act btn-save-primary" onclick="exportCalibration()">
-                <span>💾 حفظ واعتماد المعايرة</span>
-            </button>
-        </div>
-    </section>
-
-    <!-- مساحة العرض الرئيسية -->
     <main id="main-stage-area">
         <div class="image-stage" id="stage">
-            <!-- صورة القمر الصناعي الفعلية -->
+            <!-- صورة القمر الصناعي -->
             <img id="satellite-image" src="sample_sat.jpg?t=1731341002" alt="Meteosat Najd Sector">
             
-            <!-- طبقة الحدود السوداء النقية للمعايرة (خالية من النصوص والعلامات) -->
-            <img id="borders-calibrated-layer" src="borders_clean_black.png?v=2" alt="Calibrated Black Borders">
+            <!-- طبقة الحدود 15518 الرسمية باللون الأسود الخالص بدون أي نصوص أو علامات -->
+            <img id="borders-15518-layer" src="exact_borders_15518_black.png?v=3" alt="Official 15518 Black Borders Overlay">
             
-            <!-- طبقة خريطة الإسناد الأصلية (للمقارنة عند الحاجة) -->
-            <img id="ref-overlay-img" src="ref_layer_760x616.png?v=1" alt="Original Reference Overlay">
-            
-            <!-- طبقة المدن (قابلة للإخفاء/الإظهار) -->
+            <!-- طبقة المدن المعتمدة -->
             <div id="markers-layer"></div>
         </div>
     </main>
 
-    <!-- نافذة كود المعايرة والاعتماد -->
-    <div id="code-modal">
-        <div class="modal-box">
-            <h3 style="margin:0; color:#38bdf8;">🎉 تم استخراج وزنة المعايرة بنجاح!</h3>
-            <p style="font-size:12px; color:#cbd5e1; margin:0;">تم نسخ كود المعايرة تلقائياً للحافظة وحفظه في المتصفح. يمكنك إرساله لي لاعتماده فوراً:</p>
-            <textarea id="output-code" class="modal-textarea" readonly></textarea>
-            <div class="modal-actions">
-                <button class="btn-act btn-save-primary" onclick="copyModalCode()">📋 نسخ الكود</button>
-                <button class="btn-act" onclick="closeModal()">إغلاق</button>
-            </div>
-        </div>
+    <div class="info-card">
+        <strong style="color:#38bdf8;">📌 ملاحظة فنية:</strong>
+        تم تطبيق ملف الطبقة الرسمي <code>15518.png</code> مباشرة دون أي إزاحة أو معالجة تحويلية، مع تحويل خطوط الحدود والبحار بالكامل إلى <strong>اللون الأسود النقي</strong> وإزالة أي شوائب، لتتطابق قطعة واحدة مع صورة القمر الصناعي بالمليمتر.
     </div>
 
     <script>
@@ -820,84 +514,28 @@
   }
 ];
 
-        let calib = {
-            dx: 0.0,
-            dy: 0.0,
-            sx: 100.0,
-            sy: 100.0,
-            rot: 0.0,
-            op: 100
-        };
-
-        const bordersImg = document.getElementById('borders-calibrated-layer');
-        const refOverlay = document.getElementById('ref-overlay-img');
+        const bordersImg = document.getElementById('borders-15518-layer');
         const markersLayer = document.getElementById('markers-layer');
 
+        let isBordersVisible = true;
         let isCitiesVisible = true;
-        let isRefVisible = false;
 
-        // استرجاع المعايرة المحفوظة سابقاً إن وجدت
-        const savedCalib = localStorage.getItem('najd_borders_calibration');
-        if (savedCalib) {
-            try {
-                calib = Object.assign(calib, JSON.parse(savedCalib));
-            } catch (e) {}
+        function toggleBorders() {
+            isBordersVisible = !isBordersVisible;
+            const btn = document.getElementById('btn-toggle-borders');
+            const txt = document.getElementById('borders-text');
+            if (isBordersVisible) {
+                bordersImg.style.display = 'block';
+                btn.classList.add('active');
+                txt.textContent = 'إخفاء الحدود (أسود)';
+            } else {
+                bordersImg.style.display = 'none';
+                btn.classList.remove('active');
+                txt.textContent = 'إظهار الحدود (أسود)';
+            }
         }
 
-        function applyCalibration() {
-            document.getElementById('slider-dx').value = calib.dx;
-            document.getElementById('slider-dy').value = calib.dy;
-            document.getElementById('slider-sx').value = calib.sx;
-            document.getElementById('slider-sy').value = calib.sy;
-            document.getElementById('slider-rot').value = calib.rot;
-            document.getElementById('slider-op').value = calib.op;
-
-            document.getElementById('val-dx').textContent = (calib.dx >= 0 ? '+' : '') + Number(calib.dx).toFixed(1) + ' px';
-            document.getElementById('val-dy').textContent = (calib.dy >= 0 ? '+' : '') + Number(calib.dy).toFixed(1) + ' px';
-            document.getElementById('val-sx').textContent = Number(calib.sx).toFixed(1) + '%';
-            document.getElementById('val-sy').textContent = Number(calib.sy).toFixed(1) + '%';
-            document.getElementById('val-rot').textContent = (calib.rot >= 0 ? '+' : '') + Number(calib.rot).toFixed(2) + '°';
-            document.getElementById('val-op').textContent = calib.op + '%';
-
-            const scaleXFactor = calib.sx / 100;
-            const scaleYFactor = calib.sy / 100;
-            const transformStr = "translate(" + calib.dx + "px, " + calib.dy + "px) scale(" + scaleXFactor + ", " + scaleYFactor + ") rotate(" + calib.rot + "deg)";
-            
-            bordersImg.style.transform = transformStr;
-            bordersImg.style.opacity = calib.op / 100;
-        }
-
-        function onCalibInput() {
-            calib.dx = parseFloat(document.getElementById('slider-dx').value) || 0;
-            calib.dy = parseFloat(document.getElementById('slider-dy').value) || 0;
-            calib.sx = parseFloat(document.getElementById('slider-sx').value) || 100;
-            calib.sy = parseFloat(document.getElementById('slider-sy').value) || 100;
-            calib.rot = parseFloat(document.getElementById('slider-rot').value) || 0;
-            calib.op = parseInt(document.getElementById('slider-op').value) || 100;
-
-            applyCalibration();
-            localStorage.setItem('najd_borders_calibration', JSON.stringify(calib));
-        }
-
-        function stepVal(key, step) {
-            if (key === 'dx') calib.dx = parseFloat((calib.dx + step).toFixed(1));
-            if (key === 'dy') calib.dy = parseFloat((calib.dy + step).toFixed(1));
-            if (key === 'sx') calib.sx = parseFloat((calib.sx + step).toFixed(1));
-            if (key === 'sy') calib.sy = parseFloat((calib.sy + step).toFixed(1));
-            if (key === 'rot') calib.rot = parseFloat((calib.rot + step).toFixed(2));
-            if (key === 'op') calib.op = Math.max(10, Math.min(100, calib.op + step));
-
-            applyCalibration();
-            localStorage.setItem('najd_borders_calibration', JSON.stringify(calib));
-        }
-
-        function resetCalibration() {
-            calib = { dx: 0, dy: 0, sx: 100, sy: 100, rot: 0, op: 100 };
-            localStorage.removeItem('najd_borders_calibration');
-            applyCalibration();
-        }
-
-        function toggleCitiesLayer() {
+        function toggleCities() {
             isCitiesVisible = !isCitiesVisible;
             const btn = document.getElementById('btn-toggle-cities');
             const txt = document.getElementById('cities-text');
@@ -910,60 +548,6 @@
                 btn.classList.remove('active');
                 txt.textContent = 'إظهار مسميات المدن';
             }
-        }
-
-        function toggleRefOverlay() {
-            isRefVisible = !isRefVisible;
-            const btn = document.getElementById('btn-ref-overlay');
-            const txt = document.getElementById('ref-text');
-            if (isRefVisible) {
-                refOverlay.style.display = 'block';
-                btn.classList.add('active');
-                txt.textContent = 'إخفاء خريطة الإسناد';
-            } else {
-                refOverlay.style.display = 'none';
-                btn.classList.remove('active');
-                txt.textContent = 'إظهار خريطة الإسناد';
-            }
-        }
-
-        function exportCalibration() {
-            const scaleXFactor = calib.sx / 100;
-            const scaleYFactor = calib.sy / 100;
-            const result = {
-                transform: "translate(" + calib.dx + "px, " + calib.dy + "px) scale(" + scaleXFactor + ", " + scaleYFactor + ") rotate(" + calib.rot + "deg)",
-                details: {
-                    offsetX_px: calib.dx,
-                    offsetY_px: calib.dy,
-                    scaleX_percent: calib.sx,
-                    scaleY_percent: calib.sy,
-                    rotate_deg: calib.rot,
-                    opacity: calib.op / 100
-                }
-            };
-
-            const jsonStr = JSON.stringify(result, null, 2);
-            localStorage.setItem('najd_borders_calibration', JSON.stringify(calib));
-
-            const modal = document.getElementById('code-modal');
-            const textarea = document.getElementById('output-code');
-            textarea.value = jsonStr;
-            modal.style.display = 'flex';
-
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(jsonStr).catch(function() {});
-            }
-        }
-
-        function copyModalCode() {
-            const textarea = document.getElementById('output-code');
-            textarea.select();
-            document.execCommand('copy');
-            alert('تم نسخ وزنة المعايرة للحافظة!');
-        }
-
-        function closeModal() {
-            document.getElementById('code-modal').style.display = 'none';
         }
 
         function renderMarkers() {
@@ -987,10 +571,8 @@
             });
         }
 
-        // تشغيل أولي
         window.onload = function() {
             renderMarkers();
-            applyCalibration();
         };
     </script>
 </body>
