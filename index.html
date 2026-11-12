@@ -435,6 +435,15 @@
 
             <!-- زر إظهار/إخفاء طبقة الإسناد الأصلية -->
             <!-- زر تجربة طبقة الحدود المتجهة SVG -->
+            <!-- زر الحدود الأصلية الدقيقة بالمليمتر (قطعة واحدة مع القمر) -->
+            <button id="btn-native-borders-toggle" class="btn-act" style="background:#0284c7; border-color:#38bdf8; color:#ffffff;" onclick="toggleNativeBorders()">
+                <span>🛰️</span>
+                <span id="native-borders-text">إظهار الحدود الأصلية (مطابقة 100%)</span>
+            </button>
+            <button id="btn-native-color-toggle" class="btn-act" style="display:none; border-color:#38bdf8;" onclick="toggleNativeColor()">
+                <span>🎨</span>
+                <span id="native-color-text">لون الحدود: سماوي</span>
+            </button>
             <button id="btn-borders-toggle" class="btn-act" style="border-color: rgba(56, 189, 248, 0.5);" onclick="toggleBordersLayer()">
                 <span>🌐</span>
                 <span id="borders-text">إظهار حدود المناطق والدول (SVG)</span>
@@ -469,6 +478,9 @@
         <div class="image-stage" id="stage">
             <img id="satellite-image" src="sample_sat.jpg?t=1731341002" alt="Meteosat Najd Sector">
             <img id="ref-overlay-img" src="ref_layer_760x616.png?v=1" alt="Original Reference Overlay">
+            <!-- طبقة الحدود الأصلية الدقيقة 100% باللون السماوي والأبيض الناصع -->
+            <img id="borders-native-cyan-img" src="borders_native_cyan.png?v=1" alt="Native Satellite Borders Cyan" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:11; display:none;">
+            <img id="borders-native-white-img" src="borders_native_white.png?v=1" alt="Native Satellite Borders White" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:11; display:none;">
             <!-- طبقة حدود الدول والمناطق المتجهة SVG -->
             <div id="borders-container" style="position:absolute; inset:0; pointer-events:none; z-index:12; display:none;">
               <svg id="borders-svg-layer" viewBox="0 0 760 616" width="100%" height="100%" style="position:absolute; inset:0; pointer-events:none; z-index:12;">
@@ -770,6 +782,60 @@
         const refOverlay = document.getElementById('ref-overlay-img');
 
         let isBordersVisible = false;
+        let isNativeBordersVisible = false;
+        let nativeColorMode = "cyan"; // or "white"
+
+        function toggleNativeBorders() {
+            isNativeBordersVisible = !isNativeBordersVisible;
+            const cyanImg = document.getElementById("borders-native-cyan-img");
+            const whiteImg = document.getElementById("borders-native-white-img");
+            const btn = document.getElementById("btn-native-borders-toggle");
+            const btnColor = document.getElementById("btn-native-color-toggle");
+            const text = document.getElementById("native-borders-text");
+
+            if (isNativeBordersVisible) {
+                if (nativeColorMode === "cyan") {
+                    cyanImg.style.display = "block";
+                    whiteImg.style.display = "none";
+                } else {
+                    cyanImg.style.display = "none";
+                    whiteImg.style.display = "block";
+                }
+                btn.style.background = "#0284c7";
+                btn.style.borderColor = "#38bdf8";
+                text.textContent = "إخفاء الحدود الأصلية (مطابقة 100%)";
+                btnColor.style.display = "inline-flex";
+            } else {
+                cyanImg.style.display = "none";
+                whiteImg.style.display = "none";
+                btn.style.background = "#1a2232";
+                btn.style.borderColor = "#2b384e";
+                text.textContent = "إظهار الحدود الأصلية (مطابقة 100%)";
+                btnColor.style.display = "none";
+            }
+        }
+
+        function toggleNativeColor() {
+            const cyanImg = document.getElementById("borders-native-cyan-img");
+            const whiteImg = document.getElementById("borders-native-white-img");
+            const colorText = document.getElementById("native-color-text");
+            if (nativeColorMode === "cyan") {
+                nativeColorMode = "white";
+                colorText.textContent = "لون الحدود: أبيض ناعم";
+                if (isNativeBordersVisible) {
+                    cyanImg.style.display = "none";
+                    whiteImg.style.display = "block";
+                }
+            } else {
+                nativeColorMode = "cyan";
+                colorText.textContent = "لون الحدود: سماوي أنيق";
+                if (isNativeBordersVisible) {
+                    cyanImg.style.display = "block";
+                    whiteImg.style.display = "none";
+                }
+            }
+        }
+
         function toggleBordersLayer() {
             isBordersVisible = !isBordersVisible;
             const container = document.getElementById("borders-container");
