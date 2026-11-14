@@ -349,7 +349,7 @@
                 </div>
                 <div class="slider-row">
                     <button class="micro-btn" onclick="stepVal('sx', -0.2)">-</button>
-                    <input type="range" id="slider-sx" min="95.0" max="105.0" step="0.1" value="100.0" oninput="onWarpInput()">
+                    <input type="range" id="slider-sx" min="95.0" max="105.0" step="0.1" value="101.1" oninput="onWarpInput()">
                     <button class="micro-btn" onclick="stepVal('sx', 0.2)">+</button>
                 </div>
             </div>
@@ -664,7 +664,7 @@
         let isCitiesVisible = true;
 
         let params = {
-            sx: 100.0,
+            sx: 101.1,
             dx: 0.0,
             dy: 0.0,
             ry: 0.0
@@ -700,7 +700,7 @@
         }
 
         function resetWarp() {
-            params = { sx: 100.0, dx: 0.0, dy: 0.0, ry: 0.0 };
+            params = { sx: 101.1, dx: 0.0, dy: 0.0, ry: 0.0 };
             applyWarp();
         }
 
