@@ -323,20 +323,29 @@
         g.appendChild(dot);
         g.appendChild(txt);
 
-        g.addEventListener('mousedown', (e) => {
+        g.style.touchAction = 'none';
+
+        const onStartDrag = (clientX, clientY, e) => {
           selectCity(c.n);
           if (!isDragEnabled) return;
-          e.preventDefault();
+          if (e.cancelable) e.preventDefault();
           e.stopPropagation();
           draggingCity = g;
           g.classList.add('dragging');
 
-          const pt = getSvgPoint(e.clientX, e.clientY);
+          const pt = getSvgPoint(clientX, clientY);
           startSvgX = pt.x;
           startSvgY = pt.y;
           origX = parseFloat(g.getAttribute('data-x'));
           origY = parseFloat(g.getAttribute('data-y'));
-        });
+        };
+
+        g.addEventListener('mousedown', (e) => onStartDrag(e.clientX, e.clientY, e));
+        g.addEventListener('touchstart', (e) => {
+          if (e.touches && e.touches.length > 0) {
+            onStartDrag(e.touches[0].clientX, e.touches[0].clientY, e);
+          }
+        }, { passive: false });
 
         svg.appendChild(g);
       });
@@ -384,10 +393,10 @@
       };
     }
 
-    window.addEventListener('mousemove', (e) => {
+    const onMoveDrag = (clientX, clientY, e) => {
       if (!draggingCity) return;
-      e.preventDefault();
-      const pt = getSvgPoint(e.clientX, e.clientY);
+      if (e.cancelable) e.preventDefault();
+      const pt = getSvgPoint(clientX, clientY);
       let nx = origX + (pt.x - startSvgX);
       let ny = origY + (pt.y - startSvgY);
       nx = Math.max(0, Math.min(100, nx));
@@ -406,15 +415,27 @@
       const cityName = draggingCity.getAttribute('data-name');
       const curPos = (savedPos[cityName] && savedPos[cityName].pos) ? savedPos[cityName].pos : pos;
       savedPos[cityName] = { x: parseFloat(nx.toFixed(3)), y: parseFloat(ny.toFixed(3)), pos: curPos };
-    });
+    };
 
-    window.addEventListener('mouseup', () => {
+    const onEndDrag = () => {
       if (!draggingCity) return;
       draggingCity.classList.remove('dragging');
       draggingCity = null;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPos));
       updateStats();
-    });
+    };
+
+    window.addEventListener('mousemove', (e) => onMoveDrag(e.clientX, e.clientY, e));
+    window.addEventListener('mouseup', onEndDrag);
+
+    window.addEventListener('touchmove', (e) => {
+      if (draggingCity && e.touches && e.touches.length > 0) {
+        onMoveDrag(e.touches[0].clientX, e.touches[0].clientY, e);
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', onEndDrag);
+    window.addEventListener('touchcancel', onEndDrag);
 
     function updateStats() {
       document.getElementById('city-count').textContent = CITIES.length;
